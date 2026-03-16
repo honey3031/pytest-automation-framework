@@ -1,0 +1,2 @@
+[32mINFO    [0m test_auth:test_auth.py:43 Test started
+[32mINFO    [0m test_auth:test_auth.py:47 Website opened successfully
