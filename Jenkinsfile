@@ -3,9 +3,20 @@ pipeline {
 
     stages {
 
-        stage('Install Python Dependencies') {
+        stage('Checkout Code') {
             steps {
-                bat 'python -m venv venv'
+                git 'https://github.com/honey3031/pytest-automation-framework.git'
+            }
+        }
+
+        stage('Create Virtual Environment') {
+            steps {
+                bat 'py -3 -m venv venv'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
                 bat 'venv\\Scripts\\pip install --upgrade pip'
                 bat 'venv\\Scripts\\pip install -r requirements.txt'
             }
@@ -25,20 +36,21 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'venv\\Scripts\\python -m pytest -v'
+                bat 'venv\\Scripts\\pytest -v'
             }
         }
 
         stage('Generate Report') {
             steps {
-                bat 'venv\\Scripts\\python -m pytest --html=reports/report.html --self-contained-html'
+                bat 'venv\\Scripts\\pytest --html=reports/report.html --self-contained-html'
             }
         }
+
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'reports/*.html', fingerprint: true
+            archiveArtifacts artifacts: 'reports/*.html'
             bat 'docker compose down'
         }
     }
