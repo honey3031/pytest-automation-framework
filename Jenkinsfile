@@ -3,13 +3,15 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Install Python Dependencies') {
             steps {
-                git branch: 'main', url: 'https://github.com/honey3031/pytest-automation-framework.git'
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\pip install --upgrade pip'
+                bat 'venv\\Scripts\\pip install -r requirements.txt'
             }
         }
 
-        stage('Clean Docker') {
+        stage('Clean Docker Containers') {
             steps {
                 bat 'docker compose down'
             }
@@ -36,7 +38,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'reports/*.html'
+            archiveArtifacts artifacts: 'reports/*.html', fingerprint: true
             bat 'docker compose down'
         }
     }
