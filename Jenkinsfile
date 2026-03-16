@@ -11,19 +11,19 @@ pipeline {
 
         stage('Start Selenium Grid') {
             steps {
-                sh 'docker compose up -d'
+                bat 'docker compose up -d'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest -v'
+                bat 'pytest -v'
             }
         }
 
         stage('Generate Report') {
             steps {
-                sh 'pytest --html=reports/report.html --self-contained-html'
+                bat 'pytest --html=reports/report.html --self-contained-html'
             }
         }
 
