@@ -9,6 +9,12 @@ pipeline {
             }
         }
 
+        stage('Clean Docker') {
+            steps {
+                bat 'docker compose down'
+            }
+        }
+
         stage('Start Selenium Grid') {
             steps {
                 bat 'docker compose up -d'
@@ -20,18 +26,11 @@ pipeline {
                 bat 'pytest -v'
             }
         }
-
-        stage('Generate Report') {
-            steps {
-                bat 'pytest --html=reports/report.html --self-contained-html'
-            }
-        }
-
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'reports/*.html', fingerprint: true
+            bat 'docker compose down'
         }
     }
 }
