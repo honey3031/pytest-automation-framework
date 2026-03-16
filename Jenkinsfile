@@ -3,9 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
+        stage('Install Dependencies') {
             steps {
-                git 'https://github.com/honey3031/test_framework.git'
+                bat 'pip install -r requirements.txt'
             }
         }
 
@@ -15,9 +15,15 @@ pipeline {
             }
         }
 
+        stage('Run Tests') {
+            steps {
+                bat 'pytest'
+            }
+        }
+
         stage('Generate Allure Report') {
             steps {
-                bat 'allure generate reports/allure-results --clean -o reports/allure-report'
+                bat 'pytest --alluredir=reports/allure-results'
             }
         }
 
