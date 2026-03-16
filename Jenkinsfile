@@ -3,29 +3,35 @@ pipeline {
 
     stages {
 
-        stage('Install Dependencies') {
+        stage('Checkout Code') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                git branch: 'main', url: 'https://github.com/honey3031/pytest-automation-framework.git'
             }
         }
 
-        stage('Run Docker Compose') {
+        stage('Start Selenium Grid') {
             steps {
-                bat 'docker-compose up --build'
+                sh 'docker compose up -d'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'python -m pytest'
+                sh 'pytest -v'
             }
         }
 
-        stage('Generate Allure Report') {
+        stage('Generate Report') {
             steps {
-                bat 'python -m pytest --alluredir=reports/allure-results'
+                sh 'pytest --html=reports/report.html --self-contained-html'
             }
         }
 
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'reports/*.html', fingerprint: true
+        }
     }
 }
