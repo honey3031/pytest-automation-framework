@@ -23,13 +23,13 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'python -m pytest -v'
+                bat 'venv\\Scripts\\python -m pytest -v'
             }
         }
 
         stage('Generate Report') {
             steps {
-                bat 'python -m pytest --html=reports/report.html --self-contained-html'
+                bat 'venv\\Scripts\\python -m pytest --html=reports/report.html --self-contained-html'
             }
         }
     }
