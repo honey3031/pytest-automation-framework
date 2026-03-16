@@ -9,21 +9,15 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Run Docker Compose') {
             steps {
-                bat 'pip install -r requirements.txt'
+                bat 'docker-compose up --build'
             }
         }
 
-        stage('Run Tests') {
+        stage('Generate Allure Report') {
             steps {
-                bat 'pytest'
-            }
-        }
-
-        stage('Generate Report') {
-            steps {
-                bat 'pytest --alluredir=reports/allure-results'
+                bat 'allure generate reports/allure-results --clean -o reports/allure-report'
             }
         }
 
