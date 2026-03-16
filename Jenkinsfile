@@ -23,13 +23,20 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'pytest -v'
+                bat 'python -m pytest -v'
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                bat 'python -m pytest --html=reports/report.html --self-contained-html'
             }
         }
     }
 
     post {
         always {
+            archiveArtifacts artifacts: 'reports/*.html'
             bat 'docker compose down'
         }
     }
